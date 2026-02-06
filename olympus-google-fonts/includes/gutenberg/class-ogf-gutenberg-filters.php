@@ -41,7 +41,7 @@ class OGF_Gutenberg_Filters {
 
 		// Store existing fontFamilies to preserve them.
 		$existing_font_families = $data['settings']['typography']['fontFamilies'];
-		$new_font_families = array();
+		$new_font_families      = array();
 
 		// Add Google fonts.
 		$fonts = OGF_Fonts::get_instance();
@@ -50,7 +50,7 @@ class OGF_Gutenberg_Filters {
 		if ( ! empty( $fonts ) ) {
 			foreach ( $fonts as $font ) {
 				if ( ogf_is_google_font( $font ) && ! empty( $font ) ) {
-					$family = OGF_Fonts::$google_fonts[ $font ]['f'];
+					$family              = OGF_Fonts::$google_fonts[ $font ]['f'];
 					$new_font_families[] = array(
 						'slug'       => sanitize_title( $font ),
 						'fontFamily' => $family,
@@ -90,13 +90,13 @@ class OGF_Gutenberg_Filters {
 
 		// Merge existing fonts with new fonts (new fonts override if slug matches).
 		$all_font_families = array();
-		$used_slugs = array();
+		$used_slugs        = array();
 
 		// Add new fonts first.
 		foreach ( $new_font_families as $font_family ) {
 			if ( ! in_array( $font_family['slug'], $used_slugs, true ) ) {
 				$all_font_families[] = $font_family;
-				$used_slugs[] = $font_family['slug'];
+				$used_slugs[]        = $font_family['slug'];
 			}
 		}
 
@@ -104,7 +104,7 @@ class OGF_Gutenberg_Filters {
 		foreach ( $existing_font_families as $font_family ) {
 			if ( is_array( $font_family ) && isset( $font_family['slug'] ) && ! in_array( $font_family['slug'], $used_slugs, true ) ) {
 				$all_font_families[] = $font_family;
-				$used_slugs[] = $font_family['slug'];
+				$used_slugs[]        = $font_family['slug'];
 			}
 		}
 
@@ -118,11 +118,10 @@ class OGF_Gutenberg_Filters {
 	/**
 	 * Add custom (uploaded) fonts to Gutenberg block editor iframe using block_editor_settings_all filter.
 	 *
-	 * @param array  $editor_settings An array containing the current Editor settings.
-	 * @param string $editor_context  The context of the editor.
+	 * @param array $editor_settings An array containing the current Editor settings.
 	 * @return array Modified editor settings with the added custom CSS style.
 	 */
-	public function add_custom_fonts( $editor_settings, $editor_context ) {
+	public function add_custom_fonts( $editor_settings ) {
 		// Define CSS for Gutenberg block editor.
 		$custom_css = ogf_return_custom_font_css();
 

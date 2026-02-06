@@ -38,7 +38,7 @@ class Olympus_Google_Fonts {
 	 */
 	public function constants() {
 		if ( ! defined( 'OGF_VERSION' ) ) {
-			define( 'OGF_VERSION', '3.9.8' );
+			define( 'OGF_VERSION', '4.0.6' );
 		}
 
 		if ( ! defined( 'OGF_DIR_PATH' ) ) {
@@ -119,7 +119,6 @@ class Olympus_Google_Fonts {
 
 		require_once OGF_DIR_PATH . '/compatibility/elementor.php';
 		require_once OGF_DIR_PATH . '/compatibility/divi-builder.php';
-
 	}
 
 	/**
@@ -145,6 +144,7 @@ class Olympus_Google_Fonts {
 
 		$url = $fonts->build_url();
 		if ( $fonts->stored_css( $url ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CSS is stored/retrieved safely.
 			echo $fonts->stored_css( $url );
 		} else {
 			echo "@import url('" . esc_url( $url ) . "');" . PHP_EOL;

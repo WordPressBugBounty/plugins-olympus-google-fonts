@@ -28,9 +28,9 @@ class OGF_Customize_Repeater_Control extends WP_Customize_Control {
 	 * Enqueue scripts/styles for the control.
 	 */
 	public function enqueue() {
-		wp_enqueue_script( 'customizer-repeater-script', OGF_DIR_URL . 'assets/js/customizer-repeater.js', array( 'jquery', 'jquery-ui-draggable', 'wp-color-picker' ), OGF_VERSION, true );
+		wp_enqueue_script( 'ogf-customizer-repeater', OGF_DIR_URL . 'assets/js/customizer-repeater.js', array( 'jquery' ), OGF_VERSION, true );
 		$ogf_repeater = array( 'return_url' => esc_url( admin_url( '/customize.php?autofocus[section]=ogf_custom' ) ) );
-		wp_localize_script( 'customizer-repeater-script', 'ogf_repeater', $ogf_repeater );
+		wp_localize_script( 'ogf-customizer-repeater', 'ogf_repeater', $ogf_repeater );
 	}
 
 	/**
@@ -90,13 +90,13 @@ class OGF_Customize_Repeater_Control extends WP_Customize_Control {
 	/**
 	 * Iterate through the array of values.
 	 *
-	 * @param array $array The array.
+	 * @param array $items The items array.
 	 */
-	private function iterate_array( $array = array() ) {
+	private function iterate_array( $items = array() ) {
 		// Counter that helps checking if the box is first and should have the delete button disabled.
 		$count = 0;
-		if ( ! empty( $array ) ) {
-			foreach ( $array as $icon ) {
+		if ( ! empty( $items ) ) {
+			foreach ( $items as $icon ) {
 				?>
 				<div class="customizer-repeater-general-control-repeater-container">
 					<?php $this->input_control( $icon, $count ); ?>

@@ -70,7 +70,7 @@ class OGF_Upload_Fonts_Screen {
 		wp_enqueue_style( 'olympus-google-fonts-admin', plugins_url( 'admin/style.css', __DIR__ ), false, '1.0.0' );
 
 		wp_enqueue_media();
-		wp_enqueue_script( 'olympus-google-fonts-upload', plugins_url( 'assets/js/uploadFonts.js', __DIR__ ), array(), '1.0.1' );
+		wp_enqueue_script( 'olympus-google-fonts-upload', plugins_url( 'assets/js/uploadFonts.js', __DIR__ ), array(), '1.0.1', true );
 	}
 
 	/**
@@ -97,7 +97,7 @@ class OGF_Upload_Fonts_Screen {
 			$parent_file = $this->parent_menu_slug; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		}
 		$screen = get_current_screen();
-		if ( ! $screen || $screen->id != 'edit-' . OGF_Fonts_Taxonomy::$taxonomy_slug ) {
+		if ( ! $screen || $screen->id !== 'edit-' . OGF_Fonts_Taxonomy::$taxonomy_slug ) {
 			return;
 		}
 
@@ -118,11 +118,11 @@ class OGF_Upload_Fonts_Screen {
 	 */
 	public function manage_columns( $columns ) {
 		$screen = get_current_screen();
-		if ( ! $screen || $screen->id != 'edit-' . OGF_Fonts_Taxonomy::$taxonomy_slug ) {
+		if ( ! $screen || $screen->id !== 'edit-' . OGF_Fonts_Taxonomy::$taxonomy_slug ) {
 			return;
 		}
 		// If current screen is add new custom fonts screen.
-		if ( isset( $screen->base ) && 'edit-tags' == $screen->base ) {
+		if ( isset( $screen->base ) && 'edit-tags' === $screen->base ) {
 			$old_columns = $columns;
 			$columns     = array(
 				'cb'   => $old_columns['cb'],
@@ -148,8 +148,8 @@ class OGF_Upload_Fonts_Screen {
 		$this->font_file_new_field( 'woff2', __( 'WOFF2 Font File', 'olympus-google-fonts' ), '' );
 		$this->font_file_new_field( 'otf', __( 'OpenType (.otf) Font File', 'olympus-google-fonts' ), '' );
 		$this->font_file_new_field( 'ttf', __( 'TrueType (.ttf) Font File', 'olympus-google-fonts' ), '' );
-		$this->font_weight_new_field( 'weight', __( 'Font Weight', 'olympus-google-fonts' ), '' );
-		$this->font_style_new_field( 'style', __( 'Font Style', 'olympus-google-fonts' ), '' );
+		$this->font_weight_new_field( 'weight', __( 'Font Weight', 'olympus-google-fonts' ) );
+		$this->font_style_new_field( 'style', __( 'Font Style', 'olympus-google-fonts' ) );
 	}
 
 	/**
@@ -166,7 +166,7 @@ class OGF_Upload_Fonts_Screen {
 		$this->font_file_edit_field( 'otf', __( 'Font .otf', 'olympus-google-fonts' ), $data['otf'], __( 'Upload the font\'s .otf file or enter the URL.', 'olympus-google-fonts' ) );
 		$this->font_weight_edit_field( 'weight', __( 'Font Weight', 'olympus-google-fonts' ), $data['weight'] );
 		$this->font_style_edit_field( 'style', __( 'Font Weight', 'olympus-google-fonts' ), $data['style'] );
-		$this->font_preload_edit_field( 'preload', __( 'Preload Font', 'olympus-google-fonts' ), $data['preload'],  __( 'Preloading is a <a href="https://fontsplugin.com/pro-upgrade">Fonts Plugin Pro</a> feature.', 'olympus-google-fonts' )  );
+		$this->font_preload_edit_field( 'preload', __( 'Preload Font', 'olympus-google-fonts' ), $data['preload'], __( 'Preloading is a <a href="https://fontsplugin.com/pro-upgrade">Fonts Plugin Pro</a> feature.', 'olympus-google-fonts' ) );
 	}
 
 
@@ -270,9 +270,8 @@ class OGF_Upload_Fonts_Screen {
 	 *
 	 * @param string $id current term id.
 	 * @param string $title font type title.
-	 * @param string $description title font type description.
 	 */
-	protected function font_weight_new_field( $id, $title, $description = '' ) {
+	protected function font_weight_new_field( $id, $title ) {
 		?>
 		<div class="ogf-custom-fonts-file-wrap form-field term-<?php echo esc_attr( $id ); ?>-wrap" >
 				<label for="metadata-<?php echo esc_attr( $id ); ?>">
@@ -301,9 +300,8 @@ class OGF_Upload_Fonts_Screen {
 	 * @param string $id current term id.
 	 * @param string $title font type title.
 	 * @param string $value title font type meta values.
-	 * @param string $description title font type description.
 	 */
-	protected function font_weight_edit_field( $id, $title, $value = '', $description = '' ) {
+	protected function font_weight_edit_field( $id, $title, $value = '' ) {
 		?>
 		<tr class="ogf-custom-fonts-file-wrap form-field term-<?php echo esc_attr( $id ); ?>-wrap ">
 			<th scope="row">
@@ -334,9 +332,8 @@ class OGF_Upload_Fonts_Screen {
 	 *
 	 * @param string $id current term id.
 	 * @param string $title font type title.
-	 * @param string $description title font type description.
 	 */
-	protected function font_style_new_field( $id, $title, $description = '' ) {
+	protected function font_style_new_field( $id, $title ) {
 		?>
 		<div class="ogf-custom-fonts-file-wrap form-field term-<?php echo esc_attr( $id ); ?>-wrap" >
 				<label for="metadata-<?php echo esc_attr( $id ); ?>">
@@ -357,9 +354,8 @@ class OGF_Upload_Fonts_Screen {
 	 * @param string $id current term id.
 	 * @param string $title font type title.
 	 * @param string $value title font type meta values.
-	 * @param string $description title font type description.
 	 */
-	protected function font_style_edit_field( $id, $title, $value = '', $description = '' ) {
+	protected function font_style_edit_field( $id, $title, $value = '' ) {
 		?>
 		<tr class="ogf-custom-fonts-file-wrap form-field term-<?php echo esc_attr( $id ); ?>-wrap ">
 			<th scope="row">
@@ -396,7 +392,7 @@ class OGF_Upload_Fonts_Screen {
 				</label>
 			</th>
 			<td>
-				<?php if( defined('OGF_PRO') ) : ?>
+				<?php if ( defined( 'OGF_PRO' ) ) : ?>
 					<input type="checkbox" id="metadata-<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( OGF_Fonts_Taxonomy::$taxonomy_slug ); ?>[<?php echo esc_attr( $id ); ?>]" <?php checked( $value, 1 ); ?> value="1">
 				<?php else : ?>
 					<p class="description"><?php echo wp_kses_post( $description ); ?></p>
@@ -413,8 +409,10 @@ class OGF_Upload_Fonts_Screen {
 	 * @param int $term_id current term id.
 	 */
 	public function save_metadata( $term_id ) {
-		if ( isset( $_POST[ OGF_Fonts_Taxonomy::$taxonomy_slug ] ) ) {// phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$value = array_map( 'esc_attr', $_POST[ OGF_Fonts_Taxonomy::$taxonomy_slug ] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by WordPress term save action.
+		if ( isset( $_POST[ OGF_Fonts_Taxonomy::$taxonomy_slug ] ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized below.
+			$value = array_map( 'esc_attr', wp_unslash( $_POST[ OGF_Fonts_Taxonomy::$taxonomy_slug ] ) );
 			OGF_Fonts_Taxonomy::update_font_data( $value, $term_id );
 		}
 	}
