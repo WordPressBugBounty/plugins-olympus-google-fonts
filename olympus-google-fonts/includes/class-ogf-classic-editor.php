@@ -74,7 +74,7 @@ if ( ! class_exists( 'OGF_Classic_Editor' ) ) :
 		 * @return array $args Modified arguments.
 		 */
 		public function add_font_sizes( $args ) {
-			if ( true === get_theme_mod( 'ogf_use_px', true ) ) {
+			if ( wp_validate_boolean( get_theme_mod( 'ogf_use_px', true ) ) ) {
 				$args['fontsize_formats'] = '6px 7px 8px 9px 10px 11px 12px 13px 14px 15px 16px 17px 18px 19px 20px 21px 22px 23px 24px 25px 26px 27px 28px 29px 30px 31px 32px 33px 34px 35px 36px 37px 38px 39px 40px 41px 42px 43px 44px 45px 46px 47px 48px 49px 50px 51px 52px 53px 55px 55px 56px 57px 58px 59px 60px 61px 62px 63px 66px 65px 66px 67px 68px 69px 70px 71px 72px 73px 77px 75px 76px 77px 78px 79px 80px';
 			}
 
@@ -222,7 +222,7 @@ if ( ! class_exists( 'OGF_Classic_Editor' ) ) :
 				}
 				$seen_choice[ $font ] = true;
 				if ( ogf_is_google_font( $font ) ) {
-					$name = $this->ogf_fonts->get_font_name( $font );
+					$name         = $this->ogf_fonts->get_font_name( $font );
 					$new_default .= $name . '=' . $name . ';';
 				}
 			}
@@ -274,92 +274,3 @@ if ( ! class_exists( 'OGF_Classic_Editor' ) ) :
 		}
 	}
 endif;
-
-/**
- * Whether the current admin screen should load Classic / TinyMCE integration.
- *
- * @param WP_Screen $screen Current screen.
- * @return bool
- */
-function ogf_screen_needs_classic_editor_integration( $screen ) {
-	if ( ! $screen instanceof WP_Screen ) {
-		return false;
-	}
-
-	/**
-	 * Short-circuit Classic Editor integration for a screen.
-	 *
-	 * @param bool|null $load   Return true to force load, false to skip, null to use default logic.
-	 * @param WP_Screen $screen Current screen.
-	 */
-	$forced = apply_filters( 'ogf_load_classic_editor_integration', null, $screen );
-	if ( true === $forced ) {
-		return true;
-	}
-	if ( false === $forced ) {
-		return false;
-	}
-
-	// Post / page / CPT screens: only when the block editor is not used for this post type.
-	if ( 'post' === $screen->base ) {
-		$post_type = $screen->post_type;
-		if ( empty( $post_type ) ) {
-			return true;
-		}
-		if ( function_exists( 'use_block_editor_for_post_type' ) ) {
-			return ! use_block_editor_for_post_type( $post_type );
-		}
-		return true;
-	}
-
-	// Legacy widgets screen (TinyMCE in text widgets).
-	if ( 'widgets' === $screen->id ) {
-		return true;
-	}
-
-	return false;
-}
-
-/**
- * Load Classic Editor integration only when needed (skip front-end and most admin screens).
- *
- * @return void
- */
-function ogf_init_classic_editor_integration() {
-	if ( true === get_theme_mod( 'ogf_disable_post_level_controls', false ) ) {
-		return;
-	}
-
-	if ( ! is_admin() ) {
-		return;
-	}
-
-	static $registered = false;
-	if ( $registered ) {
-		return;
-	}
-	$registered = true;
-
-	// admin-ajax.php does not run set_current_screen(); keep previous behavior for AJAX.
-	if ( wp_doing_ajax() ) {
-		new OGF_Classic_Editor();
-		return;
-	}
-
-	add_action(
-		'current_screen',
-		static function ( $screen ) {
-			static $booted = false;
-			if ( $booted ) {
-				return;
-			}
-			if ( ! ogf_screen_needs_classic_editor_integration( $screen ) ) {
-				return;
-			}
-			$booted = true;
-			new OGF_Classic_Editor();
-		},
-		0
-	);
-}
-add_action( 'admin_init', 'ogf_init_classic_editor_integration', 0 );

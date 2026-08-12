@@ -5,7 +5,7 @@
  * Plugin Name: Fonts Plugin | Use Google Fonts, Adobe Fonts or Upload Fonts
  * Plugin URI:  https://wordpress.org/plugins/olympus-google-fonts/
  * Description: The easiest to customize fonts in WordPress. Optimized for Speed. 1000+ font choices. Supports Google Fonts, Adobe Fonts and Upload Fonts.
- * Version:     4.1.3
+ * Version:     4.2.0
  * Author:      Fonts Plugin
  * Author URI:  https://fontsplugin.com/?utm_source=wporg&utm_medium=readme&utm_campaign=description
  * Text Domain: olympus-google-fonts
@@ -17,6 +17,37 @@
  * @copyright Copyright (c) 2020, Fonts Plugin
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
+
+/**
+ * Check whether a Pro installation has an active license.
+ *
+ * The fallback check is required for older Pro builds that do not expose the
+ * current license helper themselves.
+ *
+ * @return bool Whether Pro is licensed.
+ */
+function ogf_is_pro_active() {
+	if ( ! defined( 'OGF_PRO' ) ) {
+		return false;
+	}
+
+	if ( function_exists( 'fpp_is_license_valid' ) ) {
+		return fpp_is_license_valid();
+	}
+
+	return '' !== trim( (string) get_option( 'fpp_license_key', '' ) ) && 'valid' === get_option( 'fpp_license_status', 'invalid' );
+}
+
+/**
+ * Prevent legacy Pro builds from bootstrapping without a license.
+ */
+function ogf_block_unlicensed_pro() {
+	if ( defined( 'OGF_PRO' ) && ! ogf_is_pro_active() ) {
+		remove_action( 'init', 'fonts_plugin_pro_init', 20 );
+		remove_action( 'init', 'fpp_plugin_updater' );
+	}
+}
+add_action( 'plugins_loaded', 'ogf_block_unlicensed_pro', PHP_INT_MAX );
 
 /**
  * Initiate the plugin, unless the Pro version is active.

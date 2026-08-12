@@ -28,7 +28,7 @@ class Olympus_Google_Fonts {
 
 		add_filter( 'plugin_action_links_' . plugin_basename( OGF_DIR_PATH . 'olympus-google-fonts.php' ), array( $this, 'links' ) );
 
-		if ( ! defined( 'OGF_PRO' ) ) {
+		if ( ! ogf_is_pro_active() ) {
 			add_action( 'customize_register', array( $this, 'remove_pro_sections' ) );
 		}
 	}
@@ -38,7 +38,7 @@ class Olympus_Google_Fonts {
 	 */
 	public function constants() {
 		if ( ! defined( 'OGF_VERSION' ) ) {
-			define( 'OGF_VERSION', '4.1.3' );
+			define( 'OGF_VERSION', '4.2.0' );
 		}
 
 		if ( ! defined( 'OGF_DIR_PATH' ) ) {
@@ -82,17 +82,18 @@ class Olympus_Google_Fonts {
 		// Welcome notice class.
 		require_once OGF_DIR_PATH . 'includes/class-ogf-welcome.php';
 
-		// Reset class.
-		require_once OGF_DIR_PATH . 'includes/class-ogf-reset.php';
-		require_once OGF_DIR_PATH . 'includes/class-ogf-clear-cache.php';
+		// Disable WordPress core Font Library UI.
+		require_once OGF_DIR_PATH . 'includes/class-ogf-font-library.php';
 
 		// Classic Editor class.
 		require_once OGF_DIR_PATH . 'includes/class-ogf-classic-editor.php';
+		require_once OGF_DIR_PATH . 'includes/classic-editor-loader.php';
 
 		// News widget.
 		require_once OGF_DIR_PATH . 'includes/class-ogf-dashboard-widget.php';
 
 		// Admin sidebar page(s).
+		require_once OGF_DIR_PATH . 'admin/class-ogf-admin-page.php';
 		require_once OGF_DIR_PATH . 'admin/class-ogf-welcome-screen.php';
 	}
 
@@ -233,7 +234,7 @@ class Olympus_Google_Fonts {
 
 		$links[] = $docs_link;
 
-		if ( ! defined( 'OGF_PRO' ) ) {
+		if ( ! ogf_is_pro_active() ) {
 			// Upgrade Link.
 			$pro_link = '<a href="https://fontsplugin.com/pro-upgrade/?utm_source=plugin&utm_medium=wpadmin&utm_campaign=upsell">' . esc_html__( 'Upgrade to Pro', 'olympus-google-fonts' ) . '</a>';
 

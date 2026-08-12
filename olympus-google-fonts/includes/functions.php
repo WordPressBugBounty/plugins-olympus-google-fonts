@@ -243,7 +243,7 @@ function ogf_custom_fonts_unique() {
 			continue;
 		}
 		$seen_family[ $fam ] = true;
-		$new_fonts[ $key ]  = $fam;
+		$new_fonts[ $key ]   = $fam;
 	}
 
 	$cached = $new_fonts;
@@ -473,8 +473,17 @@ function ogf_is_elementor_activated() {
 }
 
 /**
+ * Check whether the Pro plugin is installed (regardless of license status).
+ *
+ * @return bool
+ */
+function ogf_is_pro_plugin_installed() {
+	return defined( 'FPP_VERSION' );
+}
+
+/**
  * Check if Fonts Plugin Pro is activated.
  */
 function ogf_is_fpp_activated() {
-	return function_exists( 'fonts_plugin_pro_init' );
+	return function_exists( 'fonts_plugin_pro_init' ) && ogf_is_pro_active();
 }
